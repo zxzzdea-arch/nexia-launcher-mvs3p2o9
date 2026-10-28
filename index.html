@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><title>Nexia Launcher</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' https: data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<style>
+:root{--w:#f4f4f2;--m:#808080;--d:#4a4a4a;--l:#ffffff14;--e:cubic-bezier(.2,.7,.2,1);--mx:50%;--my:30%}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;cursor:default}
+input{-webkit-user-select:text;user-select:text;cursor:text}button,a{cursor:pointer}
+body{margin:0;height:100vh;background:#050505;color:var(--w);font:13px "Segoe UI",system-ui,"Noto Sans Thai",sans-serif;overflow:hidden;position:relative}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(520px circle at var(--mx) var(--my),#ffffff12,#0000 65%),radial-gradient(#ffffff17 1px,#0000 1.2px) 0 0/24px 24px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 25%,#0004 90%);mask-image:radial-gradient(ellipse at 50% 40%,#000 25%,#0004 90%)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+.hide{display:none!important}.mu{color:var(--m)}
+@keyframes up{from{opacity:0;transform:translateY(14px)}}@keyframes pl{50%{opacity:.3}}
+/* login */
+#login{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center}
+.lc{width:372px;padding:40px 34px 28px;text-align:center;border:1px solid var(--l);border-radius:20px;background:linear-gradient(180deg,#101010cc,#080808cc);backdrop-filter:blur(14px);box-shadow:0 30px 80px #000c,inset 0 1px #ffffff12;animation:up .8s var(--e) both}
+.lc img{width:58px;filter:drop-shadow(0 0 18px #fff6)}.lc h1{margin:18px 0 6px;font:300 22px inherit;letter-spacing:.7em;text-indent:.7em}
+.lc p{margin:0 0 26px;color:var(--m);line-height:1.6}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--w);background:var(--w);color:#000;border-radius:10px;padding:12px 22px;font:600 13px inherit;transition:all .25s var(--e)}
+.btn:hover{background:#000;color:var(--w);box-shadow:0 0 30px #fff3}.btn:disabled{opacity:.35;pointer-events:none}.btn svg{width:17px;height:17px;fill:currentColor}
+.btn.o{background:none;color:var(--w);border-color:#ffffff30}.btn.o:hover{background:var(--w);color:#000}.btn.s{padding:7px 14px;font-size:12px}
+.lc .btn{width:100%;padding:13px}
+#lerr{min-height:18px;margin-top:14px;font-size:12px;color:#ddd;line-height:1.5}
+.ft{margin-top:20px;padding-top:16px;border-top:1px solid var(--l);display:flex;justify-content:center;gap:14px;font-size:10px;letter-spacing:.22em;color:var(--d);text-transform:uppercase}
+/* app */
+#app{position:fixed;inset:0;display:flex}
+aside{width:212px;flex:none;border-right:1px solid var(--l);background:#070707e6;display:flex;flex-direction:column;padding:20px 14px}
+.br{display:flex;align-items:center;gap:11px;padding:0 8px 22px}.br img{width:26px}.br b{font:300 14px inherit;letter-spacing:.5em}
+.nv{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:transparent;border:1px solid transparent;color:var(--w);font:13px inherit;text-align:left;cursor:pointer;transition:background .2s,border-color .2s}.nv:hover{background:#ffffff08;border-color:#ffffff15}.nv.navactive{background:#ffffff0d;border-color:var(--l)}.nv i{flex:1}.nv small{color:var(--m);font-size:11px}
+.sp{flex:1}
+#acc{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--l);border-radius:12px;background:#0b0b0b}
+#acc img{width:32px;height:32px;border-radius:50%;filter:grayscale(1)}#acc div{flex:1;min-width:0}#acc span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+#acc button{background:none;border:0;color:var(--m);font:11px inherit;padding:0}#acc button:hover{color:var(--w)}
+#ver{margin-top:12px;text-align:center;font-size:9px;letter-spacing:.4em;color:var(--d)}
+section.ct{flex:1;min-width:0;display:flex;flex-direction:column}
+#upd{display:none;background:var(--w);color:#000;padding:8px 24px;font-size:12px}#upd a{margin-left:12px;text-decoration:underline;font-weight:600}
+header{padding:26px 30px 8px;display:flex;align-items:flex-end;gap:12px}header div{flex:1}header h2{margin:0;font:600 22px inherit;letter-spacing:.02em}header p{margin:5px 0 0;color:var(--m)}
+main{flex:1;overflow:auto;padding:18px 30px 16px}
+#ilist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.inst{position:relative;padding:18px;border-radius:16px;border:1px solid var(--l);background:linear-gradient(170deg,#121212,#0a0a0a);overflow:hidden;animation:up .6s var(--e) both;transition:border-color .25s,transform .25s var(--e)}
+.inst:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(260px circle at var(--x,50%) var(--y,0),#ffffff14,#0000 70%)}
+.inst:hover{border-color:#ffffff38;transform:translateY(-2px)}.inst:hover:before{opacity:1}
+.top{display:flex;gap:13px;align-items:center;margin-bottom:12px}
+.mono{width:46px;height:46px;flex:none;border-radius:12px;display:grid;place-items:center;font:600 20px inherit;background:linear-gradient(145deg,#2a2a2a,#0d0d0d);border:1px solid #ffffff22;box-shadow:inset 0 1px #ffffff18}
+.top h3{margin:0 0 6px;font:600 15px inherit}.tags{display:flex;gap:6px;flex-wrap:wrap}.tags span{border:1px solid #ffffff1f;border-radius:20px;padding:2px 9px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#b8b8b8}
+.desc{color:var(--m);line-height:1.6;min-height:42px;margin-bottom:14px}
+.row{display:flex;align-items:center;gap:8px;position:relative}.st2{flex:1;font-size:11px;color:var(--m);display:flex;align-items:center;gap:7px;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;background:#444;flex:none}.dot.ok{background:var(--w);box-shadow:0 0 9px #fffa}.dot.up{background:none;border:1px solid var(--w);animation:pl 1.4s infinite}
+.ram{width:70px;background:#050505;border:1px solid #ffffff1c;border-radius:9px;color:var(--w);padding:8px;font:12px inherit;text-align:right;transition:.2s}.ram:focus{outline:none;border-color:var(--w)}
+.row .btn{padding:8px 16px;font-size:12px}
+.sk{height:176px;border-radius:16px;border:1px solid var(--l);background:linear-gradient(100deg,#0a0a0a 30%,#161616 50%,#0a0a0a 70%) 0 0/300% 100%;animation:sh 1.6s infinite}@keyframes sh{to{background-position:-300% 0}}
+.card{grid-column:1/-1;padding:24px;border-radius:16px;border:1px solid var(--l);background:#0a0a0a;line-height:1.8;max-width:520px}
+#foot{flex:none;margin:0 30px 20px;padding:11px 16px;border:1px solid var(--l);border-radius:14px;background:#0a0a0acc;display:flex;align-items:center;gap:14px}
+#st{flex:1;font-size:12px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#st.er,#st.ok{color:var(--w)}
+.bar{width:200px;height:3px;border-radius:3px;background:#1d1d1d;overflow:hidden}.bar i{display:block;height:100%;width:0;border-radius:3px;background:var(--w);box-shadow:0 0 10px #fff9;transition:width .2s}#pc{width:34px;text-align:right;font-size:11px;color:var(--m)}
+.lc small{display:block;margin:-2px 0 16px;font-size:10px;letter-spacing:.9em;text-indent:.9em;color:var(--m)}
+.row2{display:flex;gap:8px;margin-top:10px}.row2 .btn{padding:6px 12px;font-size:11px}
+.new{padding:2px 9px!important;border-color:var(--w)!important;color:var(--w)!important}
+#mdl{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:#000a;backdrop-filter:blur(6px)}
+.mb{width:470px;max-width:92vw;max-height:92vh;overflow:auto;padding:26px;border:1px solid #ffffff2a;border-radius:18px;background:linear-gradient(180deg,#121212,#080808);box-shadow:0 30px 80px #000c;animation:up .4s var(--e) both}
+.mb h3{margin:0 0 16px;font:600 17px inherit}.mb label{display:block;margin:12px 0 6px;font-size:11px;color:var(--m);letter-spacing:.06em}
+.mb input,.mb select,.mb textarea{width:100%;background:#050505;border:1px solid #ffffff1c;border-radius:9px;color:var(--w);padding:9px 10px;font:13px inherit}.mb textarea{resize:vertical;min-height:56px;max-height:120px;-webkit-user-select:text;user-select:text;cursor:text}.mb select{cursor:pointer}.mb select option{background:#050505}
+.mb input:focus,.mb select:focus,.mb textarea:focus{outline:none;border-color:var(--w)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#c-err{min-height:18px;margin-top:12px;font-size:12px;color:#ddd}.ma{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+/* Instance artwork + Library */
+.inst-banner{display:block;width:calc(100% + 36px);height:86px;object-fit:cover;margin:-18px -18px 14px;border-bottom:1px solid #ffffff18;background:#0a0a0a}
+.inst-visuals{display:flex;align-items:center;gap:9px;flex:none}
+.inst-cover{width:46px;height:46px;object-fit:cover;border-radius:10px;border:1px solid #ffffff22;background:#080808;flex:none}
+.mono img{width:100%;height:100%;object-fit:cover;border-radius:11px}.mono:has(img){padding:0;overflow:hidden}
+#library-page{min-height:100%;}
+.lib-controls{position:sticky;top:-18px;z-index:4;padding:0 0 14px;background:linear-gradient(#050505 85%,#05050500)}
+.searchline{display:flex;gap:9px;margin-bottom:12px}
+.searchline input,.lib-filter input,.lib-filter select,.cf-config input{min-width:0;width:100%;background:#090909;border:1px solid #ffffff20;color:var(--w);border-radius:10px;padding:10px 12px;font:13px inherit;outline:none}
+.searchline input:focus,.lib-filter input:focus,.lib-filter select:focus,.cf-config input:focus{border-color:#ffffff70}
+.lib-filter{display:grid;grid-template-columns:1fr 1.1fr .8fr 1fr;gap:10px;margin-bottom:10px}
+.lib-filter label,.cf-config label{display:block;min-width:0;color:var(--m);font-size:10px;letter-spacing:.04em}
+.lib-filter input,.lib-filter select{display:block;margin-top:5px}
+.lib-target-row{display:flex;align-items:end;gap:10px;margin-bottom:10px}
+.lib-target-row label{display:block;flex:1;min-width:0;color:var(--m);font-size:10px;letter-spacing:.04em}
+.lib-target-row select{display:block;width:100%;margin-top:5px;background:#090909;border:1px solid #ffffff20;color:var(--w);border-radius:10px;padding:10px 12px;font:13px inherit}
+.cf-config{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;padding:12px;margin:8px 0 12px;border:1px solid #ffffff20;border-radius:12px;background:#0a0a0a}
+.cf-config label{grid-column:1/-1}.cf-config small,.cf-config .cf-note{grid-column:1/-1;color:var(--m);font-size:10px;line-height:1.6}
+.lib-status{font-size:11px;color:var(--m);margin:10px 0 14px;min-height:18px;line-height:1.6}
+.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;padding-bottom:20px}
+.project-card{position:relative;min-width:0;overflow:hidden;border:1px solid var(--l);border-radius:15px;background:linear-gradient(170deg,#121212,#080808);animation:up .35s var(--e) both;transition:border-color .2s,transform .2s}
+.project-card:hover{border-color:#ffffff40;transform:translateY(-2px)}
+.project-banner{display:block;width:100%;height:96px;object-fit:cover;background:#0b0b0b;border-bottom:1px solid #ffffff12}
+.project-head{display:flex;align-items:center;gap:10px;padding:13px 14px 0;min-width:0}
+.project-cover{width:42px;height:42px;flex:none;object-fit:cover;border-radius:10px;border:1px solid #ffffff22;background:#050505}
+.project-heading{min-width:0;flex:1}.project-heading h3{font-size:13px;line-height:1.4;margin:0 0 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-meta{display:flex;flex-wrap:wrap;gap:5px}.project-meta span{font-size:9px;color:#b7b7b7;border:1px solid #ffffff1c;border-radius:12px;padding:2px 7px}
+.project-desc{padding:10px 14px 0;color:#a3a3a3;font-size:11px;line-height:1.6;min-height:47px;max-height:64px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.project-stats{padding:10px 14px 0;color:#707070;font-size:10px;display:flex;justify-content:space-between;gap:6px}
+.project-actions{display:flex;gap:8px;padding:12px 14px 14px}.project-actions .btn{flex:1;padding:8px 9px;font-size:11px}.project-actions .btn.o{border-color:#ffffff20}
+.lib-empty{grid-column:1/-1;padding:30px;border:1px dashed #ffffff25;border-radius:14px;color:var(--m);text-align:center;line-height:1.8}
+@media(max-width:1000px){.lib-filter{grid-template-columns:1fr 1fr}.project-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}}
+@media(max-height:680px){.lib-controls{position:relative;top:0}}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#262626;border-radius:8px}
+</style></head><body>
+<div id="upd"></div>
+
+<section id="login" class="hide"><div class="lc">
+  <img src="assets/mark.png" alt=""><h1>NEXIA</h1><small>LAUNCHER</small>
+  <p>เข้าสู่ระบบเพื่อติดตั้ง Instance<br>และอัปเดต mod ของคุณ</p>
+  <button class="btn" id="btn-login"><svg viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.2.5a18 18 0 0 1 4.3 2.1 14.6 14.6 0 0 0-14.9 0A18 18 0 0 1 8.9 3.5L8.6 3a19.8 19.8 0 0 0-4.9 1.4C.6 9 0 13.5.3 18a19.9 19.9 0 0 0 6 3l1.3-2.1a13 13 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.1 0l.5.4a13 13 0 0 1-2 1l1.3 2.1a19.9 19.9 0 0 0 6-3c.4-5.2-.7-9.7-3.7-13.6ZM8.5 15.3c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.1 1.1 2.1 2.4-.9 2.4-2.1 2.4Zm7 0c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.1 1.1 2.1 2.4-.9 2.4-2.1 2.4Z"/></svg><span id="lbl">เข้าสู่ระบบด้วย Discord</span></button>
+  <div id="lerr"></div><div class="ft"><span>Fabric</span><span>Forge</span><span>Mods</span></div>
+</div></section>
+
+<div id="app" class="hide">
+  <aside><div class="br"><img src="assets/mark.png" alt=""><b>NEXIA</b></div>
+    <button class="nv navactive" id="nav-instances"><span>Instances</span><i></i><small id="cnt"></small></button>
+    <button class="nv" id="nav-library"><span>Library</span><i></i><small>MODS</small></button>
+    <div class="sp"></div><div id="acc"></div><div id="ver"></div></aside>
+  <section class="ct">
+    <header><div><h2 id="page-title">Instances</h2><p id="page-subtitle">เลือกติดตั้งหรืออัปเดต หรือสร้าง Instance ของคุณเอง แล้วกด Play ใน Minecraft Launcher</p></div><button class="btn s" id="cr">+ สร้าง Instance</button><button class="btn o s" id="rf">รีเฟรช</button></header>
+    <main>
+      <div id="instances-page"><div id="ilist"></div></div>
+      <div id="library-page" class="hide">
+        <div class="lib-controls">
+          <div class="searchline"><input id="lib-q" maxlength="120" placeholder="ค้นหา Mod, Resource Pack หรือ Shader..."><button class="btn" id="lib-search">ค้นหา</button></div>
+          <div class="lib-filter">
+            <label>ประเภท<select id="lib-type"><option value="mods">Mods / Libraries</option><option value="resourcepacks">Resource Packs</option><option value="shaders">Shaders</option></select></label>
+            <label>แหล่งข้อมูล<select id="lib-source"><option value="both">Modrinth + CurseForge</option><option value="modrinth">Modrinth</option><option value="curseforge">CurseForge</option></select></label>
+            <label>Minecraft<input id="lib-mc" value="1.20.1" maxlength="12" placeholder="1.20.1"></label>
+            <label>Loader<select id="lib-loader"><option value="any">Any</option><option value="fabric">Fabric</option><option value="forge">Forge</option><option value="neoforge">NeoForge</option><option value="quilt">Quilt</option></select></label>
+          </div>
+          <div class="lib-target-row"><label>ติดตั้งลง Instance<select id="lib-target"><option value="">โหลดรายการ Instance...</option></select></label><button class="btn o s" id="cf-toggle">ตั้งค่า CurseForge API</button></div>
+          <div class="cf-config hide" id="cf-config"><label for="cf-key">CurseForge API Key</label><input id="cf-key" type="password" autocomplete="off" placeholder="วาง API key ที่ได้รับอนุญาต"><button class="btn s" id="cf-save">บันทึก</button><span id="cf-key-status" class="cf-note">ต้องใช้ API key สำหรับค้นหา/ดาวน์โหลดจาก CurseForge</span></div>
+        </div>
+        <div id="lib-status" class="lib-status">เลือกประเภทและกดค้นหา เพื่อดูรายการจาก Modrinth และ CurseForge</div>
+        <div id="lib-results" class="project-grid"></div>
+      </div>
+    </main>
+    <div id="foot"><div id="st"></div><div class="bar"><i id="bar"></i></div><div id="pc"></div></div>
+  </section>
+</div>
+<div id="mdl" class="hide"><div class="mb">
+  <h3>สร้าง Instance ใหม่</h3>
+  <label>ชื่อ Instance</label><input id="c-name" maxlength="40" placeholder="เช่น Survival กับเพื่อน">
+  <div class="g2"><div><label>เวอร์ชัน Minecraft</label><select id="c-mc"></select></div>
+  <div><label>Loader</label><select id="c-ld"><option value="fabric">Fabric</option><option value="forge">Forge</option><option value="vanilla">Vanilla</option></select></div></div>
+  <div id="c-lvw"><label>เวอร์ชันของ Loader</label><select id="c-lv"></select></div>
+  <label>RAM (MB)</label><input id="c-ram" type="number" min="1024" step="512" value="4096">
+  <label>Description / คำอธิบาย (ไม่บังคับ)</label><textarea id="c-desc" maxlength="400" rows="2" placeholder="คำอธิบาย Instance"></textarea>
+  <div class="g2"><div><label>Icon URL</label><input id="c-icon" maxlength="2048" placeholder="https://..."></div><div><label>Cover URL</label><input id="c-cover" maxlength="2048" placeholder="https://..."></div></div>
+  <label>Banner URL</label><input id="c-banner" maxlength="2048" placeholder="https://...">
+  <div id="c-err"></div>
+  <div class="ma"><button class="btn o s" id="c-cancel">ยกเลิก</button><button class="btn s" id="c-ok">สร้าง</button></div>
+</div></div>
+<script>
+const N=window.nexia,$=id=>document.getElementById(id),clean=e=>String(e.message||e).replace(/^Error invoking remote method '[^']+': (Error: )?/,"");
+document.addEventListener("mousemove",e=>{document.body.style.setProperty("--mx",e.clientX+"px");document.body.style.setProperty("--my",e.clientY+"px")});
+["copy","cut","contextmenu","selectstart","dragstart"].forEach(e=>document.addEventListener(e,ev=>{if(ev.target.tagName!=="INPUT")ev.preventDefault()}));
+const st=(t,c)=>{$("st").textContent=t;$("st").className=c||""},bar=r=>{const p=Math.round(r*100);$("bar").style.width=p+"%";$("pc").textContent=p?p+"%":""};
+let busy=false,currentPage="instances",latestInstances=[],libraryLoadedOnce=false,libraryInstalling=false;const setBusy=b=>{busy=b;$("rf").disabled=b;$("cr").disabled=b;document.querySelectorAll(".inst button,.inst input").forEach(x=>x.disabled=b)};
+N.on("progress",p=>{st(p.label+(p.total?` ${p.done}/${p.total}`:" ..."));bar(p.total?p.done/p.total:.05)});
+N.on("installed",d=>{st(`พร้อมแล้ว — เปิด Minecraft Launcher เลือกโปรไฟล์ “Nexia · ${d.name}” แล้วกด Play`,"ok");bar(1)});
+N.on("update-available",u=>{const b=$("upd");b.style.display="block";b.textContent="มี Nexia เวอร์ชัน "+u.version+" "+u.notes;
+  const a=document.createElement("a");a.textContent="อัปเดตเลย";a.onclick=async()=>{a.textContent="กำลังโหลด...";try{await N.invoke("update:apply")}catch(e){a.textContent="ล้มเหลว: "+e.message}};b.appendChild(a)});
+
+function showUser(u){
+  $("login").classList.toggle("hide",!!u);$("app").classList.toggle("hide",!u);const a=$("acc");a.textContent="";if(!u)return;
+  const i=document.createElement("img");i.src=u.avatar?`https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=64`:"https://cdn.discordapp.com/embed/avatars/0.png";
+  const d=document.createElement("div"),s=document.createElement("span");s.textContent=u.name;const o=document.createElement("button");o.textContent="ออกจากระบบ";
+  o.onclick=async()=>{await N.invoke("auth:logout");showUser(null);st("");bar(0)};d.append(s,o);a.append(i,d);
+}
+$("btn-login").onclick=async()=>{
+  $("btn-login").disabled=true;$("lbl").textContent="รอยืนยันในเบราว์เซอร์...";$("lerr").textContent="";
+  try{showUser(await N.invoke("auth:login"));st("");loadInstances()}catch(e){$("lerr").textContent=clean(e)}
+  $("lbl").textContent="เข้าสู่ระบบด้วย Discord";$("btn-login").disabled=false;
+};
+$("rf").onclick=()=>{if(!busy)loadInstances()};
+const chip=t=>{const s=document.createElement("span");s.textContent=t;return s};
+function imageNode(url,cls,alt){if(!/^https:\/\//i.test(String(url||"")))return null;const im=document.createElement("img");im.className=cls;im.alt=alt||"";im.loading="lazy";im.referrerPolicy="no-referrer";im.src=url;im.onerror=()=>im.remove();return im}
+function card(i,n){
+  const r=document.createElement("div");r.className="inst";r.style.animationDelay=n*70+"ms";
+  r.onmousemove=e=>{const b=r.getBoundingClientRect();r.style.setProperty("--x",e.clientX-b.left+"px");r.style.setProperty("--y",e.clientY-b.top+"px")};
+  const bannerImage=imageNode(i.bannerUrl,"inst-banner",i.name+" banner");if(bannerImage)r.append(bannerImage);
+  const top=document.createElement("div");top.className="top";const visuals=document.createElement("div");visuals.className="inst-visuals";
+  const coverImage=imageNode(i.coverUrl,"inst-cover",i.name+" cover");if(coverImage)visuals.append(coverImage);
+  const mo=document.createElement("div");mo.className="mono";const iconImage=imageNode(i.iconUrl,"",i.name+" icon");if(iconImage)mo.append(iconImage);else mo.textContent=(i.name||"?").trim().charAt(0).toUpperCase();visuals.append(mo);
+  const tt=document.createElement("div"),h=document.createElement("h3");h.textContent=i.name;const tg=document.createElement("div");tg.className="tags";
+  tg.append(chip(i.mc),chip(i.loader+(i.loaderVersion&&i.loader!=="vanilla"?" "+i.loaderVersion:"")));if(i.custom){const c=chip("ของฉัน");c.className="new";tg.append(c)}tt.append(h,tg);top.append(visuals,tt);
+  const ds=document.createElement("div");ds.className="desc";ds.textContent=i.description||"";
+  const state=i.local===null?["","ยังไม่ได้ติดตั้ง","ติดตั้ง"]:(i.remote&&i.remote!==i.local?["up","มีอัปเดต","อัปเดต"]:["ok","เป็นเวอร์ชันล่าสุด","ซ่อมแซม"]);
+  const row=document.createElement("div");row.className="row";const s2=document.createElement("div");s2.className="st2";const dt=document.createElement("i");dt.className="dot "+state[0];s2.append(dt,state[1]);
+  const ram=document.createElement("input");ram.className="ram";ram.type="number";ram.min=1024;ram.step=512;ram.value=localStorage["ram_"+i.id]||i.ramMb||3072;ram.title="RAM (MB)";
+  const g=document.createElement("button");g.className="btn";g.textContent=state[2];
+  g.onclick=async()=>{localStorage["ram_"+i.id]=ram.value;setBusy(true);st("เริ่มติดตั้ง...");bar(.02);
+    try{await N.invoke("instances:install",i.id,+ram.value);await loadInstances()}catch(e){st(clean(e),"er")}setBusy(false)};
+  row.append(s2,ram,g);r.append(top,ds,row);
+  if(i.custom){
+    const r2=document.createElement("div");r2.className="row2";
+    const fo=document.createElement("button");fo.className="btn o";fo.textContent="เปิดโฟลเดอร์ (ใส่ mod)";
+    fo.onclick=()=>N.invoke("custom:open",i.id).catch(e=>st(clean(e),"er"));
+    const dl=document.createElement("button");dl.className="btn o";dl.textContent="ลบ";
+    dl.onclick=async()=>{if(!confirm("ลบ Instance “"+i.name+"” ออกจากรายการ?\n(ไฟล์เกมและโลกในโฟลเดอร์จะไม่ถูกลบ)"))return;
+      try{await N.invoke("custom:delete",i.id);await loadInstances()}catch(e){st(clean(e),"er")}};
+    r2.append(fo,dl);r.append(r2);
+  }
+  return r;
+}
+async function loadInstances(){
+  const box=$("ilist");box.textContent="";for(let k=0;k<2;k++){const s=document.createElement("div");s.className="sk";box.appendChild(s)}
+  let d=null;try{d=await N.invoke("instances:list")}catch(e){st(clean(e),"er")}
+  const cu=await N.invoke("custom:list").catch(()=>[]);
+  box.textContent="";
+  if(d&&!d.whitelisted){const c=document.createElement("div");c.className="card";c.textContent="บัญชี Discord นี้ยังไม่ได้รับสิทธิ์ Instance ของเซิร์ฟเวอร์ — แจ้งแอดมินให้เพิ่ม Whitelist ด้วยชื่อ: "+d.name+" (ยังสร้าง Instance ของตัวเองได้)";
+    const b=document.createElement("button");b.className="btn o s";b.style.cssText="display:flex;margin-top:14px";b.textContent="คัดลอก Discord ID";
+    b.onclick=()=>navigator.clipboard.writeText(d.id).then(()=>b.textContent="คัดลอกแล้ว ✓");c.appendChild(b);box.appendChild(c)}
+  const all=[...(d&&d.whitelisted?d.instances:[]),...cu];latestInstances=all;refreshLibraryTargets();
+  $("cnt").textContent=all.length?String(all.length):"";
+  if(!all.length&&d&&d.whitelisted){const c=document.createElement("div");c.className="card mu";c.textContent="ยังไม่มี Instance — กด “+ สร้าง Instance” เพื่อสร้างของคุณเอง";box.appendChild(c)}
+  all.forEach((i,n)=>box.appendChild(card(i,n)));
+}
+
+// ---- Library browser: Modrinth / CurseForge ----
+function setPage(page){
+  currentPage=page;const lib=page==="library";
+  $("instances-page").classList.toggle("hide",lib);$("library-page").classList.toggle("hide",!lib);
+  $("nav-instances").classList.toggle("navactive",!lib);$("nav-library").classList.toggle("navactive",lib);
+  $("cr").classList.toggle("hide",lib);$("rf").classList.toggle("hide",lib);
+  $("page-title").textContent=lib?"Library":"Instances";
+  $("page-subtitle").textContent=lib?"ค้นหาและติดตั้ง Mods, Resource Packs และ Shaders ลง Instance ของคุณ":"เลือกติดตั้งหรืออัปเดต หรือสร้าง Instance ของคุณเอง แล้วกด Play ใน Minecraft Launcher";
+  if(lib){refreshLibraryTargets();syncCfKeyStatus();if(!libraryLoadedOnce){libraryLoadedOnce=true;searchLibrary()}}
+}
+function refreshLibraryTargets(){
+  const sel=$("lib-target");if(!sel)return;const prev=sel.value;sel.textContent="";
+  const ready=latestInstances.filter(i=>i.gameInstalled);
+  if(!latestInstances.length){const op=document.createElement("option");op.value="";op.textContent="ยังไม่มี Instance";sel.append(op);return}
+  latestInstances.forEach(i=>{const op=document.createElement("option");op.value=i.id;op.textContent=`${i.name} · ${i.mc} · ${i.loader}${i.gameInstalled?"":" (ต้องติดตั้งก่อน)"}`;op.disabled=!i.gameInstalled;sel.append(op)});
+  const choose=latestInstances.find(i=>i.id===prev&&i.gameInstalled)||ready[0]||latestInstances[0];if(choose)sel.value=choose.id;applyLibraryTarget();
+}
+function applyLibraryTarget(){
+  const target=latestInstances.find(i=>i.id===$("lib-target").value);if(!target){updateProjectInstallButtons();return}
+  $("lib-mc").value=target.mc||"1.20.1";
+  const l=String(target.loader||"").toLowerCase();$("lib-loader").value=["fabric","forge","neoforge","quilt"].includes(l)?l:"any";updateProjectInstallButtons();
+}
+function projectCompatible(target,type){if(!target||!target.gameInstalled)return false;const l=String(target.loader||"").toLowerCase();return !((type==="mods"||type==="shaders")&&l==="vanilla")}
+function updateProjectInstallButtons(){
+  const target=latestInstances.find(i=>i.id===$("lib-target").value);
+  document.querySelectorAll("#lib-results .project-card").forEach(c=>{const b=c.querySelector(".install-btn");if(!b)return;b.disabled=libraryInstalling||!projectCompatible(target,c.dataset.projectType);b.title=!target||!target.gameInstalled?"ต้องเลือก Instance ที่ติดตั้งแล้ว":(!projectCompatible(target,c.dataset.projectType)?"มอดและ Shader ต้องใช้ Fabric / Forge ที่รองรับ":"ติดตั้งทันที")});
+}
+async function syncCfKeyStatus(){
+  try{const d=await N.invoke("library:cf-key:status");$("cf-key-status").textContent=d.configured?"บันทึก API key แล้ว (ซ่อนไว้ในเครื่องนี้)":"ยังไม่ได้ตั้งค่า API key — Modrinth ใช้ได้ตามปกติ"}
+  catch(e){$("cf-key-status").textContent=clean(e)}
+}
+function renderProject(p){
+  const c=document.createElement("article");c.className="project-card";c.dataset.projectType=p.type;
+  const ban=imageNode(p.bannerUrl,"project-banner",p.title+" banner");if(ban)c.append(ban);
+  const head=document.createElement("div");head.className="project-head";
+  const cover=imageNode(p.coverUrl||p.iconUrl,"project-cover",p.title+" cover");if(cover)head.append(cover);
+  const hg=document.createElement("div");hg.className="project-heading";const h=document.createElement("h3");h.textContent=p.title||"Untitled";const meta=document.createElement("div");meta.className="project-meta";
+  meta.append(chip(p.source==="modrinth"?"Modrinth":"CurseForge"),chip(({mods:"MOD",resourcepacks:"RESOURCE PACK",shaders:"SHADER"})[p.type]||p.type));hg.append(h,meta);head.append(hg);c.append(head);
+  const desc=document.createElement("div");desc.className="project-desc";desc.textContent=p.description||"ไม่มีคำอธิบาย";c.append(desc);
+  const stats=document.createElement("div");stats.className="project-stats";const author=document.createElement("span");author.textContent="โดย "+(p.author||"ไม่ทราบผู้สร้าง");const downloads=document.createElement("span");downloads.textContent=(Number(p.downloads)||0).toLocaleString("en-US")+" downloads";stats.append(author,downloads);c.append(stats);
+  const actions=document.createElement("div");actions.className="project-actions";const install=document.createElement("button");install.className="btn install-btn";install.textContent="ติดตั้งทันที";const target=latestInstances.find(i=>i.id===$("lib-target").value&&projectCompatible(i,p.type));install.disabled=!target;
+  install.title=target?"ติดตั้งลง "+target.name:"เลือก Instance ที่ติดตั้งแล้วและรองรับประเภทนี้ก่อน";
+  install.onclick=async()=>{
+    if(libraryInstalling)return;const t=latestInstances.find(i=>i.id===$("lib-target").value&&projectCompatible(i,p.type));if(!t){$("lib-status").textContent="เลือก Instance ที่ติดตั้งแล้วและรองรับประเภทนี้ก่อน (มอด/Shader ไม่รองรับ Vanilla)";return}
+    libraryInstalling=true;updateProjectInstallButtons();document.querySelectorAll(".project-actions button").forEach(x=>x.disabled=true);const label=install.textContent;install.textContent="กำลังติดตั้ง...";st("กำลังติดตั้ง "+p.title);bar(.03);
+    try{const out=await N.invoke("library:install",{instanceId:t.id,project:p});$("lib-status").textContent=`ติดตั้ง ${out.title} สำเร็จใน ${t.name} (${out.count} ไฟล์ รวม dependencies ที่จำเป็น)`;st("ติดตั้ง "+out.title+" เสร็จแล้ว","ok");bar(1)}
+    catch(e){$("lib-status").textContent=clean(e);st(clean(e),"er");bar(0)}
+    install.textContent=label;libraryInstalling=false;updateProjectInstallButtons();document.querySelectorAll(".project-actions button").forEach(x=>{if(!x.classList.contains("install-btn"))x.disabled=false});
+  };
+  const open=document.createElement("button");open.className="btn o";open.textContent="ดูหน้าโปรเจกต์";open.onclick=()=>N.invoke("library:open",p.url).catch(e=>{$("lib-status").textContent=clean(e)});
+  actions.append(install,open);c.append(actions);return c;
+}
+async function searchLibrary(){
+  const btn=$("lib-search");if(btn.disabled)return;btn.disabled=true;btn.textContent="กำลังค้นหา...";
+  const options={query:$("lib-q").value,type:$("lib-type").value,gameVersion:$("lib-mc").value.trim(),loader:$("lib-loader").value,source:$("lib-source").value};
+  const box=$("lib-results");box.textContent="";$("lib-status").textContent="กำลังค้นหาในคลังที่เลือก...";
+  try{
+    const sources=options.source==="both"?["modrinth","curseforge"]:[options.source];
+    const resolved=await Promise.allSettled(sources.map(source=>N.invoke("library:search",{...options,source})));
+    const all=[],errors=[];resolved.forEach((r,i)=>{if(r.status==="fulfilled")all.push(...r.value);else errors.push(`${sources[i]}: ${clean(r.reason)}`)});
+    all.sort((a,b)=>(Number(b.downloads)||0)-(Number(a.downloads)||0));
+    if(all.length){all.forEach(p=>box.append(renderProject(p)));$("lib-status").textContent=`พบ ${all.length} รายการ`+(errors.length?" · "+errors.join(" · "):"")}
+    else{const empty=document.createElement("div");empty.className="lib-empty";empty.textContent=errors.length?errors.join(" · "):"ไม่พบรายการที่ตรงกัน ลองเปลี่ยนคำค้นหา เวอร์ชัน หรือประเภท";box.append(empty);$("lib-status").textContent="ค้นหาเสร็จแล้ว"}
+  }catch(e){$("lib-status").textContent=clean(e)}
+  btn.disabled=false;btn.textContent="ค้นหา";
+}
+$("nav-instances").onclick=()=>setPage("instances");$("nav-library").onclick=()=>setPage("library");
+$("lib-search").onclick=searchLibrary;$("lib-q").addEventListener("keydown",e=>{if(e.key==="Enter")searchLibrary()});
+$("lib-target").onchange=applyLibraryTarget;
+$("lib-type").onchange=()=>{$("lib-loader").disabled=$("lib-type").value!=="mods"};
+$("cf-toggle").onclick=()=>{$("cf-config").classList.toggle("hide");syncCfKeyStatus()};
+$("cf-save").onclick=async()=>{
+  const b=$("cf-save");b.disabled=true;const old=b.textContent;b.textContent="กำลังบันทึก...";
+  try{const d=await N.invoke("library:cf-key:set",$("cf-key").value);$("cf-key").value="";$("cf-key-status").textContent=d.configured?"บันทึก API key แล้ว (ซ่อนไว้ในเครื่องนี้)":"ลบ API key แล้ว";st("บันทึกค่า CurseForge แล้ว","ok");if($("lib-source").value!=="modrinth")searchLibrary()}
+  catch(e){$("cf-key-status").textContent=clean(e)}b.textContent=old;b.disabled=false;
+};
+// ---- สร้าง Instance เอง ----
+let mcList=null,lvTok=0;
+const fill=(sel,arr)=>{sel.textContent="";arr.forEach(v=>{const o=document.createElement("option");o.value=o.textContent=v;sel.appendChild(o)})};
+async function refreshLv(){
+  const ld=$("c-ld").value,sel=$("c-lv"),tok=++lvTok;$("c-lvw").classList.toggle("hide",ld==="vanilla");if(ld==="vanilla")return;
+  $("c-ok").disabled=true;sel.textContent="";const o=document.createElement("option");o.textContent="กำลังโหลด...";sel.appendChild(o);
+  try{const l=await N.invoke("custom:loaders",$("c-mc").value,ld);if(tok!==lvTok)return;
+    if(!l.length){sel.textContent="";const x=document.createElement("option");x.value="";x.textContent="ไม่รองรับ Minecraft เวอร์ชันนี้";sel.appendChild(x)}else{fill(sel,l);$("c-ok").disabled=false}
+  }catch(e){if(tok===lvTok){$("c-err").textContent=clean(e);sel.textContent=""}}
+}
+$("cr").onclick=async()=>{
+  if(busy)return;$("mdl").classList.remove("hide");$("c-err").textContent="";$("c-name").value="";$("c-desc").value="";$("c-icon").value="";$("c-cover").value="";$("c-banner").value="";$("c-name").focus();
+  if(!mcList){try{mcList=await N.invoke("custom:versions")}catch(e){$("c-err").textContent=clean(e);return}}
+  if(!$("c-mc").options.length)fill($("c-mc"),mcList);
+  refreshLv();
+};
+$("c-mc").onchange=refreshLv;$("c-ld").onchange=refreshLv;
+$("c-cancel").onclick=()=>$("mdl").classList.add("hide");
+$("mdl").onmousedown=e=>{if(e.target===$("mdl"))$("mdl").classList.add("hide")};
+$("c-ok").onclick=async()=>{
+  $("c-ok").disabled=true;$("c-err").textContent="";
+  try{await N.invoke("custom:create",{name:$("c-name").value,mc:$("c-mc").value,loader:$("c-ld").value,loaderVersion:$("c-lv").value,ramMb:+$("c-ram").value,description:$("c-desc").value,iconUrl:$("c-icon").value,bannerUrl:$("c-banner").value,coverUrl:$("c-cover").value});
+    $("mdl").classList.add("hide");st("สร้าง Instance แล้ว — กด “ติดตั้ง” ที่การ์ดเพื่อเริ่ม","ok");bar(0);loadInstances()}
+  catch(e){$("c-err").textContent=clean(e)}
+  $("c-ok").disabled=false;
+};
+(async()=>{$("ver").textContent="V"+await N.invoke("app:version");const u=await N.invoke("auth:restore");showUser(u);if(u)loadInstances();$("lib-loader").disabled=$("lib-type").value!=="mods"})();
+</script></body></html>
